@@ -11,6 +11,10 @@ public class App
 
         // Connect to database
         a.connect();
+        // Get Employee
+        City emp = a.getCity(5);
+        // Display results
+        a.displayCity(emp);
 
         // Disconnect from database
         a.disconnect();
@@ -78,6 +82,51 @@ public class App
             {
                 System.out.println("Error closing connection to database");
             }
+        }
+    }
+
+    public City getCity(int ID)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT ID, Name, CountryCode "
+                            + "FROM city "
+                            + "WHERE ID = " + ID;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Return new employee if valid.
+            // Check one is returned
+            if (rset.next())
+            {
+                City emp = new City();
+                emp.ID_key = rset.getInt("ID");
+                emp.Name = rset.getString("Name");
+                emp.CountryCode = rset.getString("CountryCode");
+                return emp;
+            }
+            else
+                return null;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get City details");
+            return null;
+        }
+    }
+
+    public void displayCity(City emp)
+    {
+        if (emp != null)
+        {
+            System.out.println(
+                    emp.ID_key + " "
+                            + emp.Name + "\n"
+                            + emp.CountryCode + "\n");
         }
     }
 }
